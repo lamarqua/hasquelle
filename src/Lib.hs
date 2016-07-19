@@ -4,7 +4,11 @@ module Lib
 
 import Text.ParserCombinators.Parsec
 import Data.List
+import Data.Char
+import Data.Bimap
 
+translations :: String -> Bimap
+translations
 
 haskellFile :: GenParser Char st String
 haskellFile = do
@@ -13,18 +17,18 @@ haskellFile = do
 
 spaceSeparatedWord :: GenParser Char st String
 spaceSeparatedWord = do
-    word <- keywordOrElse
+    word <- haskellWord
     ss <- many space
-    return (word ++ ss)
+    return $ word ++ ss
 
-keywordOrElse :: GenParser Char st String
-keywordOrElse = try keyword <|> try (many1 $ anyChar)
+haskellWord :: GenParser Char st String
+haskellWord = try keyword <|> try (many1 $ satisfy (\x -> not (isSpace x)))
 
 keyword :: GenParser Char st String
 keyword = do
     string "if"
-    ss <- many1 space
-    return $ "si" ++ ss
+    s <- space
+    return $ "si" ++ [s]
 
 parseHaskell :: String -> Either ParseError String
 parseHaskell input = parse haskellFile "(unknown)" input
