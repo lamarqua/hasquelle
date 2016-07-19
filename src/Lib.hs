@@ -25,10 +25,9 @@ haskellWord :: GenParser Char st String
 haskellWord = try keyword <|> try (many1 $ satisfy (\x -> not (isSpace x)))
 
 keyword :: GenParser Char st String
-keyword = do
-    string "if"
-    s <- space
-    return $ "si" ++ [s]
+keyword = string "if" >> ((lookAhead space) <|> (eof >> return '0')) >> return "si"
+    -- s <- space
+    -- return $ "si" ++ [s]
 
 parseHaskell :: String -> Either ParseError String
 parseHaskell input = parse haskellFile "(unknown)" input
