@@ -5,10 +5,10 @@
 import Text.ParserCombinators.Parsec
 import Data.List
 import Data.Char
-import Data.Bimap
+-- import Data.Bimap
 
-translations :: String -> Bimap
-translations
+-- translations :: String -> Bimap
+-- translations
 
 haskellFile :: GenParser Char st String
 haskellFile = do
