@@ -5,8 +5,9 @@ import System.Environment
 
 main :: IO ()
 main = do
-    a <- getExecutablePath
-    putStrLn a
-    file <- readFile "/Users/adrien/dev/haskell/hasquelle/test/test.hs"
+    -- programName <- getExecutablePath
+    args <- getArgs
+    -- putStrLn programName
+    -- mapM putStrLn args
+    file <- readFile (head args) --"/Users/adrien/dev/haskell/hasquelle/test/test.hs"
     putStrLn (translateHaskell file)
-
