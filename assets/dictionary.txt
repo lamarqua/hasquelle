@@ -43,3 +43,5 @@ foldl plierg
 foldr plierd
 reverse renverser
 Text Texte
+filter filtrer
+putStrLn mettreChLgn

@@ -8,8 +8,12 @@ import Data.List
 import Data.Char
 import Data.Bimap
 
--- translations :: String -> Bimap
--- translations
+-- TODO
+-- Command line arguments for order of translation
+-- Better error handling
+-- Clean up code
+
+data TranslationOrder = NormalOrder | ReverseOrder
 
 haskellFile :: Parsec String (Bimap String String) String
 haskellFile = do
@@ -27,18 +31,42 @@ haskellDelimiter :: Parsec String (Bimap String String) Char
 haskellDelimiter = oneOf "-{}+*/^&<>|=\\.!;,()[]`':@~_" <|> space
 
 haskellWord :: Parsec String (Bimap String String) String
-haskellWord = try keyword <|> try (many1 $ satisfy (\x -> not (isSpace x)))
+haskellWord = try (matchingGenerator NormalOrder)
+    <|> try (matchingGenerator ReverseOrder)
+    <|> try (many1 $ satisfy (\x -> not (isSpace x)))
 
-keyword :: Parsec String (Bimap String String) String
-keyword = do
+-- bimapFunctions :: TranslationOrder -> (Data.Bimap.Bimap a b -> [a], a -> Data.Bimap.Bimap a b -> m b)
+bimapFunctions NormalOrder = (Data.Bimap.keys, Data.Bimap.lookup)
+bimapFunctions ReverseOrder = (Data.Bimap.keysR, Data.Bimap.lookupR)
+
+matchingGenerator :: TranslationOrder -> Parsec String (Bimap String String) String
+matchingGenerator order =
+    let (keys', lookup') = bimapFunctions order in
+    do
+    -- case order of
+    --     NormalOrder -> (Data.Bimap.keys, Data.Bimap.lookup)
+    --     ReverseOrder -> (Data.Bimap.keysR, Data.Bimap.lookupR)
+    -- let keys = if NormalOrder then Data.Bimap.keys else Data.Bimap.keysR
+    -- let lookup = if NormalOrder then Data.Bimap.lookup else Data.Bimap.lookupR
+    -- let keys' = case order of
+    --     NormalOrder -> Data.Bimap.keys
+    --     ReverseOrder -> Data.Bimap.keysR
     dict <- getState
-    let longestKeysFirst = Data.List.sortOn (\x -> -1 * length x) $ Data.Bimap.keys dict
+    let longestKeysFirst = Data.List.sortOn (\x -> -1 * length x) $ keys'  dict
     matched <- try (choice $ Data.List.map (\x -> try $ string x) longestKeysFirst)
     (lookAhead haskellDelimiter) <|> (eof >> return '0')
-    let replacement = Data.Bimap.lookup matched dict
+    let replacement = lookup' matched dict
     return (head replacement)  -- WHY????
-    -- s <- haskellDelimiter
-    -- return $ "si" ++ [s]
+
+
+-- keyword :: Parsec String (Bimap String String) String
+-- keyword = do
+--     dict <- getState
+--     let longestKeysFirst = Data.List.sortOn (\x -> -1 * length x) $ Data.Bimap.keys dict
+--     matched <- try (choice $ Data.List.map (\x -> try $ string x) longestKeysFirst)
+--     (lookAhead haskellDelimiter) <|> (eof >> return '0')
+--     let replacement = Data.Bimap.lookup matched dict
+--     return (head replacement)  -- WHY????
 
 parseHaskell :: Bimap String String -> String -> Either ParseError String
 parseHaskell dict input = runParser haskellFile dict "(unknown)" input
