@@ -42,3 +42,4 @@ map convertir
 foldl plierg
 foldr plierd
 reverse renverser
+Text Texte

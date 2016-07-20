@@ -18,26 +18,26 @@ haskellFile = do
 
 spaceSeparatedWord :: Parsec String (Bimap String String) String
 spaceSeparatedWord = do
-    ss <- many space
+    ss <- many haskellDelimiter
     word <- haskellWord
-    ss' <- many space
+    ss' <- many haskellDelimiter
     return $ ss ++ word ++ ss'
 
 haskellDelimiter :: Parsec String (Bimap String String) Char
 haskellDelimiter = oneOf "-{}+*/^&<>|=\\.!;,()[]`':@~_" <|> space
 
 haskellWord :: Parsec String (Bimap String String) String
-haskellWord = try keyword' <|> try (many1 $ satisfy (\x -> not (isSpace x)))
+haskellWord = try keyword <|> try (many1 $ satisfy (\x -> not (isSpace x)))
 
-keyword' :: Parsec String (Bimap String String) String
-keyword' = do
+keyword :: Parsec String (Bimap String String) String
+keyword = do
     dict <- getState
     let longestKeysFirst = Data.List.sortOn (\x -> -1 * length x) $ Data.Bimap.keys dict
     matched <- try (choice $ Data.List.map (\x -> try $ string x) longestKeysFirst)
-    (lookAhead space) <|> (eof >> return '0')
+    (lookAhead haskellDelimiter) <|> (eof >> return '0')
     let replacement = Data.Bimap.lookup matched dict
     return (head replacement)  -- WHY????
-    -- s <- space
+    -- s <- haskellDelimiter
     -- return $ "si" ++ [s]
 
 parseHaskell :: Bimap String String -> String -> Either ParseError String
