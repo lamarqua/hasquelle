@@ -1,0 +1,3 @@
+principal :: ES ()
+principal = faire 
+    mettreChLgn "Bonjour Monde"

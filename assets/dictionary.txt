@@ -45,3 +45,5 @@ reverse renverser
 Text Texte
 filter filtrer
 putStrLn mettreChLgn
+Hello Bonjour
+World Monde

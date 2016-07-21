@@ -1,0 +1,4 @@
+#!/bin/bash
+
+stack exec hasquelle $1 assets/dictionary.txt > test/temp.hs
+stack runhaskell test/temp.hs
