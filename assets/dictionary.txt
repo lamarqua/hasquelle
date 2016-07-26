@@ -47,3 +47,13 @@ filter filtrer
 putStrLn mettreChLgn
 Hello Bonjour
 World Monde
+Control Contrôle
+chopsticks baguettes
+Monad Monade
+Vector Vecteur
+show montrer
+getLine obtenirLigne
+read lire
+words mots
+getMultipleLines obtenirPlusieursLignes
+otherwise autrement
