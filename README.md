@@ -18,12 +18,18 @@ To run a file you've written in French (.hsq) you can run hasquelle from the roo
 To run a file you've written in Russian (.xc) you can run hasqelle from the root directory:
 ```./assets/запуститьХаскел <path-to-your-file.xc>```
 
+To run a file you've written in German (.häs) you can run hasqelle from the root directory:
+```./assets/lassHäskellLaufen <path-to-your-file.häs>```
+
 ## Hello World!
 En Français:
 ```./assets/lancerHasquelle test/bonjour_monde.hsq```
 
 По Русски
 ``` ./assets/запуститьХаскел test/ПриветМир.хс```
+
+Auf Deutsch:
+```./assets/lassHäskellLaufen test/hallo_welt.häs```
 
 ## adding a new language
 
